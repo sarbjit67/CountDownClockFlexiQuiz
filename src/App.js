@@ -1,26 +1,48 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class CountDownClock extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { 'currtime': this.props.s }
+  }
+  componentDidMount() {
+    this.counter = setInterval(() => this.timer(), 1000)
+  }
+  componentWillUnmount() {
+    clearInterval(this.counter);
+  }
+  timer() {
+    let t = this.state.currtime;
+    this.setState({ 'currtime': t - 1 });
+  }
+  render() {
+    const curr = this.props.format(this.state.currtime);
+    return (
+      <p>{curr}</p>
+    );
+
+  }
+
+
+}
+
+class App extends React.Component {
+  format(seconds) {
+    let date = new Date(null);
+    date.setSeconds(seconds);
+    return date.toISOString().substr(11, 8);
+  }
+  render() {
+    return (
+      <div className="App">
+        <CountDownClock s={1000} format={this.format} />
+
+      </div>
+
+    );
+  }
+
 }
 
 export default App;
